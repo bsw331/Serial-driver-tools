@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="pageTitle">串口驱动安装助手</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"></div>
+          <h1 data-i18n="appTitle">串口驱动安装助手</h1>
+        </div>
+
+        <div class="topbar-actions">
+          <div class="lang-switcher" aria-label="Language switcher">
+            <button class="lang-btn active" data-lang="zh" type="button">中文</button>
+            <button class="lang-btn" data-lang="en" type="button">EN</button>
+          </div>
+
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            <span data-i18n="statusOnline">系统在线</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <aside class="panel left-panel">
+          <div class="eyebrow" data-i18n="aiDiagnose">AI 诊断</div>
+          <h2 data-i18n="heroTitle">Uno / Mega2560</h2>
+          <p class="subtext" data-i18n="introText">
+            一键检测串口设备、自动匹配驱动程序，并完成安装与验证，适用于 Arduino Uno、Mega2560、Nano 等常见单片机开发板。
+          </p>
+
+          <div class="device-list">
+            <div class="device-item active">
+              <div class="device-name">
+                <span class="icon-chip">▣</span>
+                Arduino Uno R3
+              </div>
+              <span class="tag" data-i18n="tagRecommended">推荐</span>
+            </div>
+            <div class="device-item">
+              <div class="device-name">
+                <span class="icon-chip">▣</span>
+                Mega2560
+              </div>
+              <span class="tag" data-i18n="tagCompatible">兼容</span>
+            </div>
+            <div class="device-item">
+              <div class="device-name">
+                <span class="icon-chip">▣</span>
+                Nano 33 IoT
+              </div>
+              <span class="tag" data-i18n="tagSupport">支持</span>
+            </div>
+          </div>
+
+          <div class="stats">
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="statDetected">已检测</div>
+              <div class="stat-value"><strong>3</strong> <span data-i18n="countUnit">个</span></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="statDriverStatus">驱动状态</div>
+              <div class="stat-value"><strong>OK</strong></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="statCompatibleModels">兼容型号</div>
+              <div class="stat-value"><strong>12</strong>+</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label" data-i18n="statInstallTime">安装耗时</div>
+              <div class="stat-value"><strong>30s</strong></div>
+            </div>
+          </div>
+        </aside>
+
+        <section class="panel right-panel">
+          <div class="card">
+            <div class="section-title">
+              <h3 data-i18n="installFlow">安装流程</h3>
+              <span class="tiny-pill" data-i18n="smartMatch">智能匹配</span>
+            </div>
+
+            <div class="action-row">
+              <button id="detectPortBtn" class="btn secondary" type="button" data-i18n="detectPort">检测串口</button>
+              <button id="installBtn" class="btn primary" type="button" data-i18n="installNow">开始安装</button>
+            </div>
+
+            <div class="form-group">
+              <label for="portSelect" data-i18n="portLabel">选择串口</label>
+              <select id="portSelect" data-i18n-placeholder="portPlaceholder">
+                <option value="">请选择串口设备</option>
+                <option value="/dev/cu.usbserial-0001">/dev/cu.usbserial-0001</option>
+                <option value="COM3">COM3</option>
+                <option value="COM5">COM5</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label data-i18n="driverType">驱动类型</label>
+              <div class="driver-grid" id="driverGrid">
+                <div class="driver-option selected" data-driver="CH340">
+                  <div class="driver-badge" data-i18n="badgeRecommended">推荐</div>
+                  <strong>CH340</strong>
+                  <small data-i18n="driverCH340Desc">适用于 Uno / Nano / Mega2560</small>
+                </div>
+                <div class="driver-option" data-driver="CP2102">
+                  <strong>CP2102</strong>
+                  <small data-i18n="driverCP2102Desc">适用于 ESP32 / Sensor Node</small>
+                </div>
+                <div class="driver-option" data-driver="FT232R">
+                  <strong>FT232R</strong>
+                  <small data-i18n="driverFT232RDesc">适用于高级开发板 / USB转串口</small>
+                </div>
+                <div class="driver-option" data-driver="PL2303">
+                  <strong>PL2303</strong>
+                  <small data-i18n="driverPL2303Desc">兼容老款 USB 串口模块</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card progress-card">
+            <div class="progress-head">
+              <h3 data-i18n="progressTitle">安装进度</h3>
+              <span id="statusText" data-i18n="waitingInstall">等待安装</span>
+            </div>
+
+            <div class="progress-bar" aria-label="安装进度">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="progress-meta">
+              <span id="currentStep" data-i18n="notStarted">未开始</span>
+              <span id="percentText">0%</span>
+            </div>
+
+            <div class="log-box">
+              <ul class="log-list" id="logList">
+                <li data-i18n="logReady">设备连接检测完成</li>
+                <li data-i18n="logWaiting">等待选择串口与驱动</li>
+              </ul>
+            </div>
+
+            <div id="successMsg" class="success-msg" data-i18n="successInstalled">
+              驱动已成功安装并完成验证，串口设备已可正常使用。
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
